@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d9488" />
+
+    <title>PRAYUDDHA 2K26 — Inter-Collegiate Technical Symposium | Anna University, Tiruchirappalli</title>
+    <meta
+      name="description"
+      content="PRAYUDDHA 2K26 — Unleash. Innovate. Conquer. An inter-collegiate technical and non-technical symposium organized by the Department of IT & AIML, University College of Engineering (BIT) Campus, Anna University, Tiruchirappalli. October 9, 2026."
+    />
+    <meta name="keywords" content="PRAYUDDHA, symposium, technical events, Anna University, Tiruchirappalli, BIT Campus, IT, AIML, 2026" />
+    <meta name="author" content="Department of IT & AIML, UCE (BIT) Campus" />
+    <link rel="canonical" href="/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PRAYUDDHA 2K26 — Inter-Collegiate Technical Symposium" />
+    <meta
+      property="og:description"
+      content="Unleash. Innovate. Conquer. An inter-collegiate technical and non-technical symposium at University College of Engineering (BIT) Campus, Anna University, Tiruchirappalli. October 9, 2026."
+    />
+    <meta property="og:image" content="/social-preview.png" />
+    <meta property="og:site_name" content="PRAYUDDHA 2K26" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PRAYUDDHA 2K26 — Inter-Collegiate Technical Symposium" />
+    <meta
+      name="twitter:description"
+      content="Unleash. Innovate. Conquer. October 9, 2026 — Anna University, Tiruchirappalli."
+    />
+    <meta name="twitter:image" content="/social-preview.png" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Prevent theme flash -->
+    <script>
+      (function () {
+        var theme = localStorage.getItem('prayuddha-theme') || 'system';
+        var resolved =
+          theme === 'system'
+            ? window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+            : theme;
+        document.documentElement.setAttribute('data-theme', resolved);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
