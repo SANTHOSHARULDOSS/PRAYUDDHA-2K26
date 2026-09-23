@@ -1,11 +1,12 @@
 export const prizes = {
   technical: {
-    first: 'TBA',
-    second: 'TBA',
+    first: '₹1,000',
+    second: '₹500',
   },
   nonTechnical: {
-    first: 'TBA',
-    second: 'TBA',
+    first: 'Prizes / Gifts (TBA)',
+    second: 'Prizes / Gifts (TBA)',
   },
-  overallChampion: 'TBA',
+  overallChampion: 'Overall Championship Trophy (TBA)',
 } as const;
+

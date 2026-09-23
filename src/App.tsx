@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
+import StudentTipWhatsApp from '@/components/StudentTipWhatsApp';
 import About from '@/components/About';
+import LocationReach from '@/components/LocationReach';
 import Events from '@/components/Events';
 import Prizes from '@/components/Prizes';
 import Rules from '@/components/Rules';
@@ -25,7 +27,9 @@ export default function App() {
       <Navbar />
       <main>
         <Hero />
+        <StudentTipWhatsApp />
         <About />
+        <LocationReach />
         <Events />
         <Prizes />
         <Rules />

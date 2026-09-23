@@ -5,6 +5,8 @@ export const SITE_CONFIG = {
   slogan: 'IDEAS IGNITE IMPACTS',
   tagline: 'LET THE IDEAS BATTLE',
   symposiumIdentity: 'A SYMPOSIUM • BEYOND • BOUNDARIES',
+  entryFeeNotice: 'ONE ENTRY FEE • FULL SYMPOSIUM ACCESS',
+  entryFeeSubtext: 'Single Entry Fee for the Complete Symposium (Includes Veg & Non-Veg Biryani Lunch)',
   coreValues: ['IDEAS', 'PEOPLE', 'OPPORTUNITIES', 'IMPACT'],
   eventDate: '09 October 2026',
   eventDateShort: 'October 9, 2026',
@@ -19,11 +21,11 @@ export const SITE_CONFIG = {
   pincode: '620024',
   state: 'Tamil Nadu',
   address: 'University College of Engineering (BIT) Campus, Anna University, Tiruchirappalli – 620024, Tamil Nadu',
-  registrationURL: 'TBA',
-  googleMapsURL: 'TBA',
-  email: 'TBA',
-  instagram: 'TBA',
-  whatsapp: 'TBA',
+  registrationURL: '#register',
+  googleMapsURL: 'https://www.google.com/maps/place/Anna+University+RO+Tiruchirappalli/@10.6581513,78.7423525,17z',
+  email: 'prayuddha2k26@gmail.com',
+  instagram: '@prayuddha2k26',
+  whatsapp: 'https://chat.whatsapp.com/EWYDbkcT7US2GPasizlxlT',
   departments: [
     'Department of Information Technology',
     'Department of Artificial Intelligence & Machine Learning',
@@ -31,6 +33,7 @@ export const SITE_CONFIG = {
   navLinks: [
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },
+    { label: 'Reach Us', href: '#reach-us' },
     { label: 'Events', href: '#events' },
     { label: 'Prizes', href: '#prizes' },
     { label: 'Rules', href: '#rules' },
@@ -42,3 +45,4 @@ export const SITE_CONFIG = {
 } as const;
 
 export type SiteConfig = typeof SITE_CONFIG;
+

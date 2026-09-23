@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle2, AlertCircle, Info, Calendar } from 'lucide-react';
 import { events } from '@/data/events';
+import { SITE_CONFIG } from '@/data/siteConfig';
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
 
 interface FormData {
@@ -116,6 +117,17 @@ export default function Registration() {
             className="max-w-2xl mx-auto surface-card p-6 sm:p-8 space-y-5 reveal"
             noValidate
           >
+            {/* Single Fee & Lunch Highlight Banner */}
+            <div className="surface-card p-4 rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-light)]/30 space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-[var(--accent)] uppercase tracking-wider">
+                <span>ONE ENTRY FEE • FULL SYMPOSIUM ACCESS</span>
+                <span>Includes Biryani Lunch</span>
+              </div>
+              <p className="text-xs text-[var(--text-secondary)]">
+                Single registration fee covers all technical & non-technical events plus delicious Veg / Non-Veg Biryani lunch for participants.
+              </p>
+            </div>
+
             {/* Prototype notice */}
             <div className="flex items-start gap-2 p-3 rounded-lg bg-[var(--warning-light)] text-[var(--warning)] text-sm">
               <Info size={16} className="shrink-0 mt-0.5" />
@@ -318,6 +330,43 @@ export default function Registration() {
             </button>
           </form>
         )}
+
+        {/* FINAL CTA BLOCK */}
+        <div className="max-w-4xl mx-auto mt-16 surface-card p-8 rounded-2xl border-2 border-[var(--accent)] shadow-xl text-center reveal bg-[var(--surface)] relative overflow-hidden">
+          <div className="space-y-3">
+            <span className="badge badge-accent text-xs font-bold uppercase tracking-wider">
+              Join Us at Anna University BIT Campus
+            </span>
+            <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">
+              Don’t just hear about PRAYUDDHA 2K26. Be there.
+            </h3>
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] font-medium max-w-2xl mx-auto">
+              One entry. Full symposium experience. Great events, great food, great memories.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+              <a
+                href="#register"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' });
+                  document.getElementById('r-name')?.focus();
+                }}
+                className="btn btn-primary shadow-md"
+              >
+                <Calendar size={16} />
+                Register Now
+              </a>
+              <a
+                href={SITE_CONFIG.googleMapsURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-secondary shadow-sm"
+              >
+                Get Directions
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -81,6 +81,28 @@
   --code-bg: #0f172a;
 }
 
+/* PRAYUDDHA Special Theme: Red + Gold */
+[data-theme='prayuddha'] {
+  --background: #120306;
+  --surface: #1d070b;
+  --surface-elevated: #2b0b11;
+  --text-primary: #fff1f2;
+  --text-secondary: #fecdd3;
+  --text-muted: #fb7185;
+  --border: #4c111a;
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --accent-light: #451a03;
+  --secondary: #fff1f2;
+  --success: #34d399;
+  --success-light: #064e3b;
+  --warning: #fbbf24;
+  --warning-light: #451a03;
+  --danger: #f87171;
+  --danger-light: #450a0a;
+  --code-bg: #180508;
+}
+
 /* ===== Base ===== */
 @layer base {
   * {

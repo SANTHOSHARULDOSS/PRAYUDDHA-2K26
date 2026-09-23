@@ -61,19 +61,35 @@ export default function Navbar() {
         }`}
       >
         <nav className="container-px flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Brand & Logos */}
           <a
             href="#home"
             onClick={(e) => {
               e.preventDefault();
               handleNavClick('#home');
             }}
-            className="flex items-center gap-2 font-display font-bold text-lg shrink-0"
+            className="flex items-center gap-3 shrink-0 group"
           >
-            <span className="text-[var(--accent)]">PRAYUDDHA</span>
-            <span className="text-xs font-semibold text-[var(--text-muted)] hidden sm:inline">
-              2K26
-            </span>
+            <img
+              src="/images/anna-university-logo.png"
+              alt="Anna University Logo"
+              className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105"
+            />
+            <div className="h-6 w-px bg-[var(--border)] hidden xs:block" />
+            <img
+              src="/images/prayuddha-logo.png"
+              alt="PRAYUDDHA Logo"
+              className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
+            />
+            <div className="flex flex-col">
+              <span className="font-display font-bold text-base sm:text-lg text-[var(--text-primary)] leading-tight flex items-center gap-1">
+                <span className="text-[var(--accent)]">PRAYUDDHA</span>
+                <span className="text-xs font-semibold text-[var(--text-muted)]">2K26</span>
+              </span>
+              <span className="text-[10px] font-medium text-[var(--text-muted)] hidden xl:block">
+                Anna University, BIT Campus
+              </span>
+            </div>
           </a>
 
           {/* Desktop nav */}

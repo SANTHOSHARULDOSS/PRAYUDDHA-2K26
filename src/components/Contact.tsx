@@ -25,37 +25,134 @@ export default function Contact() {
     <section id="contact" ref={ref} className="section-py bg-[var(--surface)]/50">
       <div className="container-px">
         <div className="max-w-3xl mx-auto text-center mb-12 reveal">
-          <span className="section-eyebrow">Contact</span>
-          <h2 className="section-title mt-2 mb-4">Get in Touch</h2>
+          <span className="section-eyebrow">Venue & Reach</span>
+          <h2 className="section-title mt-2 mb-4">Location & How to Reach</h2>
           <p className="text-[var(--text-secondary)] text-lg">
-            Have questions? Reach out to the organizing committee.
+            Find event blocks, travel routes, and organizing committee contact information.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Left: venue + contacts */}
-          <div className="space-y-5">
-            {/* Venue */}
-            <div className="surface-card p-5 reveal">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-[var(--accent-light)] flex items-center justify-center">
-                  <MapPin size={20} className="text-[var(--accent)]" />
-                </div>
-                <h3 className="font-display text-lg font-bold">Venue</h3>
-              </div>
-              <p className="text-sm text-[var(--text-secondary)] mb-1 font-medium">
-                {SITE_CONFIG.venue}
+        {/* HOW TO REACH & VENUE BLOCKS GUIDE */}
+        <div className="surface-card p-6 sm:p-8 mb-12 rounded-2xl border border-[var(--border)] reveal space-y-6 bg-[var(--surface)]">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-[var(--border)] pb-6">
+            <div>
+              <span className="badge badge-accent text-xs mb-2">NH 336 Location</span>
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-[var(--text-primary)]">
+                {SITE_CONFIG.institution}
+              </h3>
+              <p className="text-sm text-[var(--text-secondary)] mt-1">
+                Tiruchirappalli – Pudukkottai National Highway (NH 336), Tiruchirappalli – 620024
               </p>
-              <p className="text-sm text-[var(--text-muted)]">{SITE_CONFIG.address}</p>
-              <div className="mt-4 surface-card aspect-video bg-[var(--code-bg)] flex flex-col items-center justify-center gap-2">
-                <Navigation size={32} className="text-[var(--text-muted)]" />
-                <p className="text-xs text-[var(--text-muted)]">Map placeholder</p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  Google Maps URL: {SITE_CONFIG.googleMapsURL}
+            </div>
+            <a
+              href="https://maps.google.com/?q=Anna+University+BIT+Campus+Tiruchirappalli"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary shrink-0 flex items-center gap-2"
+            >
+              <Navigation size={16} />
+              Open in Google Maps
+            </a>
+          </div>
+
+          {/* Venue & Blocks Breakdown */}
+          <div>
+            <h4 className="font-display text-sm font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+              📍 Venue & Blocks Schedule
+            </h4>
+            <div className="grid sm:grid-cols-3 gap-3">
+              <div className="p-3.5 rounded-xl bg-[var(--code-bg)] border border-[var(--border)]">
+                <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider block mb-1">
+                  Inauguration
+                </span>
+                <p className="text-sm font-bold text-[var(--text-primary)]">
+                  Dr. A.P.J. Abdul Kalam Auditorium
                 </p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">B-Block</p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[var(--code-bg)] border border-[var(--border)]">
+                <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider block mb-1">
+                  Technical & Non-Tech Events
+                </span>
+                <p className="text-sm font-bold text-[var(--text-primary)]">
+                  Event Labs & Classrooms
+                </p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">C-Block</p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[var(--code-bg)] border border-[var(--border)]">
+                <span className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider block mb-1">
+                  Prize Distribution
+                </span>
+                <p className="text-sm font-bold text-[var(--text-primary)]">
+                  Valedictory Ceremony
+                </p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">B-Block Auditorium</p>
               </div>
             </div>
+          </div>
 
+          {/* Travel Route Cards */}
+          <div>
+            <h4 className="font-display text-sm font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+              🚌 Travel Routes
+            </h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Route 1: From Trichy */}
+              <div className="surface-card p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] space-y-2">
+                <div className="flex items-center justify-between">
+                  <h5 className="font-display font-bold text-base text-[var(--text-primary)] flex items-center gap-2">
+                    <Navigation size={16} className="text-[var(--accent)]" />
+                    From Trichy
+                  </h5>
+                  <span className="badge badge-accent text-[11px]">Frequent Buses</span>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Buses run frequently from Trichy Central Bus Stand / Chathiram Bus Stand towards Keeranur / Pudukkottai route.
+                </p>
+                <div className="p-2.5 rounded-lg bg-[var(--code-bg)] text-xs font-medium text-[var(--text-primary)]">
+                  Get down at: <span className="text-[var(--accent)] font-bold">Anna University / BIT Campus stop</span>
+                </div>
+              </div>
+
+              {/* Route 2: From Keeranur */}
+              <div className="surface-card p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] space-y-2">
+                <div className="flex items-center justify-between">
+                  <h5 className="font-display font-bold text-base text-[var(--text-primary)] flex items-center gap-2">
+                    <Navigation size={16} className="text-[var(--accent)]" />
+                    From Keeranur
+                  </h5>
+                  <span className="badge badge-accent text-[11px]">Frequent Buses</span>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Frequent buses available from Keeranur side taking the Trichy direction / BIT Campus route.
+                </p>
+                <div className="p-2.5 rounded-lg bg-[var(--code-bg)] text-xs font-medium text-[var(--text-primary)]">
+                  Get down at: <span className="text-[var(--accent)] font-bold">BIT Campus stop</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Ticket Info & Simple Flow */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-[var(--accent-light)]/40 border border-[var(--accent)]/30">
+            <div className="text-xs text-[var(--text-primary)] space-y-1">
+              <p className="font-bold flex items-center gap-1 text-sm text-[var(--accent)]">
+                🎫 Bus Ticket Information
+              </p>
+              <p>Ask for <span className="font-semibold text-[var(--text-primary)]">Anna University / BIT Campus</span> ticket when boarding.</p>
+              <p className="text-[11px] text-[var(--text-muted)]">Approximate fare: ₹15 – ₹30 depending on starting point and bus service.</p>
+            </div>
+            <div className="text-xs font-mono bg-[var(--surface)] px-3 py-2 rounded-lg border border-[var(--border)] text-[var(--accent)] font-semibold shrink-0">
+              Flow: Bus → BIT Campus → B-Block (Auditorium)
+            </div>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Left: contacts & social */}
+          <div className="space-y-5">
             {/* Core contacts */}
             <div className="surface-card p-5 reveal">
               <h3 className="font-display text-lg font-bold mb-4">Core Committee Contacts</h3>

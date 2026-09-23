@@ -14,12 +14,13 @@ export interface Team {
 export const coreCommittee: CommitteeMember[] = [
   { name: 'S. Sindhuja', role: 'President', phone: '9884526924', priority: true },
   { name: 'A. Santhosh', role: 'Vice President', phone: '7603934990', priority: true },
+  { name: 'R. SriRagabharathi', role: 'Overall Coordinator', phone: '9043167020' },
+  { name: 'L. Lakshana', role: 'Overall Coordinator', phone: '9344848321' },
+  { name: 'H. Karthikeyan', role: 'Overall Coordinator', phone: '6385902910' },
   { name: 'A. Maryshalini', role: 'Secretary', phone: '9600599356' },
-  { name: 'J. Pavithra', role: 'Joint Secretary', phone: '637985456' },
+  { name: 'J. Pavithra', role: 'Joint Secretary', phone: '6379854556' },
   { name: 'V. Sivasankar', role: 'Student Coordinator', phone: '8637616928' },
-  { name: 'R. SriRagabharathi', role: 'Overall Coordinator', phone: '90431 67020' },
-  { name: 'L. Lakshana', role: 'Overall Coordinator', phone: '93448 48321' },
-  { name: 'K. Karthikeyan', role: 'Overall Coordinator', phone: '63859 02910' },
+
 ];
 
 export const organizingTeams: Team[] = [];

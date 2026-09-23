@@ -66,22 +66,24 @@ export default function Gallery() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {filtered.map((item, idx) => (
             <button
               key={item.id}
               onClick={() => setLightboxIdx(idx)}
-              className="surface-card aspect-square overflow-hidden group reveal"
+              className="surface-card aspect-square overflow-hidden group reveal relative rounded-xl border border-[var(--border)]"
               aria-label={`View ${item.caption}`}
             >
-              <div className="w-full h-full bg-[var(--code-bg)] flex flex-col items-center justify-center gap-2 group-hover:bg-[var(--accent-light)] transition-colors">
-                <ImageIcon
-                  size={32}
-                  className="text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors"
-                />
-                <span className="text-xs text-[var(--text-muted)] group-hover:text-[var(--accent)] text-center px-2 transition-colors">
+              <img
+                src={item.image}
+                alt={item.caption}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-left">
+                <span className="text-xs font-semibold text-white font-display leading-tight">
                   {item.caption}
                 </span>
+                <span className="text-[10px] text-white/70">{item.category}</span>
               </div>
             </button>
           ))}
@@ -90,7 +92,7 @@ export default function Gallery() {
         {/* Lightbox */}
         {lightboxIdx !== null && filtered[lightboxIdx] && (
           <div
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in p-4"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-md animate-fade-in p-4"
             onClick={(e) => {
               if (e.target === e.currentTarget) closeLightbox();
             }}
@@ -109,14 +111,18 @@ export default function Gallery() {
             >
               <ChevronLeft size={28} />
             </button>
-            <div className="max-w-3xl w-full text-center">
-              <div className="aspect-video surface-card flex items-center justify-center mb-3">
-                <ImageIcon size={48} className="text-[var(--text-muted)]" />
+            <div className="max-w-4xl w-full text-center flex flex-col items-center">
+              <div className="max-h-[75vh] w-auto overflow-hidden rounded-xl surface-card flex items-center justify-center mb-4 bg-black/50 p-2">
+                <img
+                  src={filtered[lightboxIdx].image}
+                  alt={filtered[lightboxIdx].caption}
+                  className="max-h-[70vh] w-auto object-contain rounded-lg shadow-2xl"
+                />
               </div>
-              <p className="text-white font-display font-semibold">
+              <p className="text-white font-display font-semibold text-lg">
                 {filtered[lightboxIdx].caption}
               </p>
-              <p className="text-white/60 text-sm">{filtered[lightboxIdx].category}</p>
+              <p className="text-white/70 text-sm">{filtered[lightboxIdx].category}</p>
             </div>
             <button
               onClick={nextImage}
