@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Menu, X, Calendar } from 'lucide-react';
-import { SITE_CONFIG } from '@/data/siteConfig';
+import { Menu, X, Calendar, Shield } from 'lucide-react';
+import { useCMS } from '@/hooks/useCMS';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import ThemeToggle from './ThemeToggle';
 
-export default function Navbar() {
+interface NavbarProps {
+  onOpenAdmin?: () => void;
+}
+
+export default function Navbar({ onOpenAdmin }: NavbarProps) {
+  const { siteConfig } = useCMS();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -19,7 +24,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const sections = SITE_CONFIG.navLinks.map((l) => l.href.slice(1));
+    const sections = siteConfig.navLinks.map((l) => l.href.slice(1));
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -33,7 +38,7 @@ export default function Navbar() {
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, []);
+  }, [siteConfig.navLinks]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -47,8 +52,16 @@ export default function Navbar() {
 
   const handleNavClick = (href: string) => {
     closeMenu();
+    if (href === '#register') {
+      window.open(siteConfig.googleFormUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleRegisterClick = () => {
+    window.open(siteConfig.googleFormUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -71,20 +84,20 @@ export default function Navbar() {
             className="flex items-center gap-3 shrink-0 group"
           >
             <img
-              src="/images/anna-university-logo.png"
+              src="/images/branding/anna-university-logo.png"
               alt="Anna University Logo"
               className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105"
             />
             <div className="h-6 w-px bg-[var(--border)] hidden xs:block" />
             <img
-              src="/images/prayuddha-logo.png"
+              src="/images/branding/prayuddha-logo.png"
               alt="PRAYUDDHA Logo"
               className="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105"
             />
             <div className="flex flex-col">
               <span className="font-display font-bold text-base sm:text-lg text-[var(--text-primary)] leading-tight flex items-center gap-1">
-                <span className="text-[var(--accent)]">PRAYUDDHA</span>
-                <span className="text-xs font-semibold text-[var(--text-muted)]">2K26</span>
+                <span className="text-[var(--accent)]">{siteConfig.siteName.split(' ')[0]}</span>
+                <span className="text-xs font-semibold text-[var(--text-muted)]">{siteConfig.edition}</span>
               </span>
               <span className="text-[10px] font-medium text-[var(--text-muted)] hidden xl:block">
                 Anna University, BIT Campus
@@ -94,7 +107,7 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-1">
-            {SITE_CONFIG.navLinks.map((link) => (
+            {siteConfig.navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -116,13 +129,25 @@ export default function Navbar() {
           {/* Right actions */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => handleNavClick('#register')}
-              className="btn btn-primary hidden sm:flex"
+              onClick={handleRegisterClick}
+              className="btn btn-primary hidden sm:flex items-center gap-1.5 shadow-md"
             >
               <Calendar size={16} />
-              Register Now
+              {siteConfig.registrationBtnText || 'Register Now'}
             </button>
+
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="btn-ghost btn !px-2 !py-2 text-[var(--text-muted)] hover:text-[var(--accent)]"
+                title="Admin Dashboard (/admin)"
+              >
+                <Shield size={18} />
+              </button>
+            )}
+
             <ThemeToggle />
+
             <button
               onClick={() => setIsOpen((v) => !v)}
               className="btn-ghost btn !px-2.5 !py-2 lg:hidden"
@@ -151,7 +176,7 @@ export default function Navbar() {
         }`}
       >
         <div className="flex flex-col gap-1 p-4 pt-6">
-          {SITE_CONFIG.navLinks.map((link) => (
+          {siteConfig.navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -169,11 +194,11 @@ export default function Navbar() {
             </a>
           ))}
           <button
-            onClick={() => handleNavClick('#register')}
-            className="btn btn-primary mt-4 w-full"
+            onClick={handleRegisterClick}
+            className="btn btn-primary mt-4 w-full flex items-center justify-center gap-2"
           >
             <Calendar size={16} />
-            Register Now
+            {siteConfig.registrationBtnText || 'Register Now'}
           </button>
         </div>
       </div>

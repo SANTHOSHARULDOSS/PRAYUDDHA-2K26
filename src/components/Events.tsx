@@ -18,11 +18,12 @@ import {
   ChevronRight,
   Ticket,
 } from 'lucide-react';
-import { events, type SymposiumEvent, type EventStatus } from '@/data/events';
-import { SITE_CONFIG } from '@/data/siteConfig';
+import { useCMS } from '@/hooks/useCMS';
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import EventModal from './EventModal';
+import type { EventItemData } from '@/types/cms';
+import type { SymposiumEvent, EventStatus } from '@/data/events';
 
 const iconMap: Record<string, typeof Brain> = {
   brain: Brain,
@@ -68,6 +69,7 @@ function statusBadge(status: EventStatus) {
 }
 
 export default function Events() {
+  const { events: cmsEvents, siteConfig } = useCMS();
   const ref = useRevealOnScroll<HTMLElement>();
   const [filter, setFilter] = useState<Filter>('All');
   const [selected, setSelected] = useState<SymposiumEvent | null>(null);
@@ -75,7 +77,6 @@ export default function Events() {
 
   useBodyScrollLock(selected !== null);
 
-  // Auto-rotate student surprise messages
   useEffect(() => {
     const timer = setInterval(() => {
       setMsgIdx((prev) => (prev + 1) % studentMessages.length);
@@ -83,10 +84,15 @@ export default function Events() {
     return () => clearInterval(timer);
   }, []);
 
+  const publishedEvents = useMemo(
+    () => cmsEvents.filter((e) => e.isPublished).sort((a, b) => a.displayOrder - b.displayOrder),
+    [cmsEvents]
+  );
+
   const filtered = useMemo(() => {
-    if (filter === 'All') return events;
-    return events.filter((e) => e.category === filter);
-  }, [filter]);
+    if (filter === 'All') return publishedEvents;
+    return publishedEvents.filter((e) => e.category === filter);
+  }, [filter, publishedEvents]);
 
   return (
     <section id="events" ref={ref} className="section-py bg-[var(--surface)]/50">
@@ -95,29 +101,26 @@ export default function Events() {
           <span className="section-eyebrow">Symposium Competitions</span>
           <h2 className="section-title mt-2 mb-3">Events at PRAYUDDHA</h2>
           <p className="text-[var(--text-secondary)] text-base sm:text-lg">
-            Explore technical and non-technical competitions designed to challenge, engage, and
-            celebrate every kind of talent.
+            Explore technical and non-technical competitions designed to challenge, engage, and celebrate every kind of talent.
           </p>
         </div>
 
         {/* SINGLE ENTRY FEE & LUNCH HIGHLIGHT BANNERS */}
         <div className="max-w-4xl mx-auto mb-10 reveal grid sm:grid-cols-2 gap-4">
-          {/* Fee Banner */}
           <div className="surface-card p-4 rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-light)]/30 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[var(--accent-light)] text-[var(--accent)] flex items-center justify-center shrink-0">
               <Ticket size={20} />
             </div>
             <div>
               <span className="font-display font-bold text-xs uppercase tracking-wider text-[var(--accent)] block">
-                {SITE_CONFIG.entryFeeNotice}
+                ONE ENTRY FEE • FULL SYMPOSIUM ACCESS
               </span>
               <p className="text-xs text-[var(--text-secondary)] font-medium mt-0.5">
-                {SITE_CONFIG.entryFeeSubtext}
+                Single Registration Fee of {siteConfig.registrationFee} Covers All Events & Biryani Lunch
               </p>
             </div>
           </div>
 
-          {/* Lunch Banner */}
           <div className="surface-card p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
               <UtensilsCrossed size={20} />
@@ -133,7 +136,7 @@ export default function Events() {
           </div>
         </div>
 
-        {/* Filters */}
+        {/* Category Filters */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-8 reveal">
           {filters.map((f) => (
             <button
@@ -143,12 +146,12 @@ export default function Events() {
                 filter === f ? 'btn-primary' : 'btn-secondary'
               }`}
             >
-              {f} ({f === 'All' ? events.length : events.filter((e) => e.category === f).length})
+              {f} ({f === 'All' ? publishedEvents.length : publishedEvents.filter((e) => e.category === f).length})
             </button>
           ))}
         </div>
 
-        {/* Grid: Removed reveal class from dynamic button items to prevent filter hide bug */}
+        {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((event) => {
             const Icon = iconMap[event.image] ?? Code;
@@ -156,7 +159,7 @@ export default function Events() {
             return (
               <button
                 key={event.id}
-                onClick={() => setSelected(event)}
+                onClick={() => setSelected(event as any)}
                 className="surface-card p-5 text-left rounded-xl border border-[var(--border)] hover:border-[var(--accent)] transition-all duration-200 hover:-translate-y-1 group flex flex-col justify-between shadow-sm bg-[var(--surface)]"
               >
                 <div>
@@ -183,11 +186,12 @@ export default function Events() {
                 </div>
 
                 <div>
-                  {/* Prize Badge */}
                   <div className="mb-4 pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1 font-semibold text-[var(--text-primary)]">
                       <Trophy size={14} className="text-[var(--accent)]" />
-                      {isTech ? '₹1,000 | ₹500' : 'Gifts (TBA)'}
+                      {event.firstPrize && event.secondPrize
+                        ? `${event.firstPrize} | ${event.secondPrize}`
+                        : event.prizes}
                     </span>
                     <span className="text-[var(--text-muted)] text-[11px] font-medium">
                       {event.teamSize}
@@ -204,7 +208,7 @@ export default function Events() {
           })}
         </div>
 
-        {/* SUBTLE STUDENT SURPRISE MESSAGES ROTATING BAR */}
+        {/* Student Tip Banner */}
         <div className="max-w-3xl mx-auto mt-12 reveal">
           <div className="surface-card p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] flex items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2 text-[var(--accent)] shrink-0 font-bold">
@@ -240,4 +244,3 @@ export default function Events() {
     </section>
   );
 }
-

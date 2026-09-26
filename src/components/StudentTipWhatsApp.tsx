@@ -88,7 +88,7 @@ export default function StudentTipWhatsApp() {
             {/* Official QR Image Visual */}
             <div className="hidden md:flex flex-col items-center bg-white p-1 rounded-lg border border-slate-200 shadow-xs">
               <img
-                src="/images/whatsapp-qr.jpg"
+                src="/images/qr/whatsapp-group-qr.png"
                 alt="PRAYUDDHA WhatsApp Official QR Code"
                 className="w-14 h-14 object-contain rounded"
               />

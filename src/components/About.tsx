@@ -46,13 +46,13 @@ export default function About() {
         <div className="surface-card p-6 sm:p-8 mb-12 rounded-2xl border border-[var(--border)] reveal flex flex-col md:flex-row items-center justify-between gap-6 bg-[var(--surface)]">
           <div className="flex items-center gap-4 shrink-0">
             <img
-              src="/images/anna-university-logo.png"
+              src="/images/branding/anna-university-logo.png"
               alt="Anna University Logo"
               className="h-16 sm:h-20 w-auto object-contain"
             />
             <div className="h-12 w-px bg-[var(--border)] hidden sm:block" />
             <img
-              src="/images/prayuddha-logo.png"
+              src="/images/branding/prayuddha-logo.png"
               alt="PRAYUDDHA Emblem"
               className="h-14 sm:h-18 w-auto object-contain hidden xs:block"
             />

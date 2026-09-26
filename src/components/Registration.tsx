@@ -1,341 +1,142 @@
 import { useState } from 'react';
-import { CheckCircle2, AlertCircle, Info, Calendar } from 'lucide-react';
-import { events } from '@/data/events';
-import { SITE_CONFIG } from '@/data/siteConfig';
+import { ExternalLink, CheckCircle2, QrCode, Phone, Sparkles, MapPin, AlertTriangle, ShieldCheck, Ticket } from 'lucide-react';
+import { useCMS } from '@/hooks/useCMS';
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
 
-interface FormData {
-  name: string;
-  college: string;
-  department: string;
-  year: string;
-  phone: string;
-  email: string;
-  event: string;
-  teamMembers: string;
-  transactionId: string;
-}
-
-const initialForm: FormData = {
-  name: '',
-  college: '',
-  department: '',
-  year: '',
-  phone: '',
-  email: '',
-  event: '',
-  teamMembers: '',
-  transactionId: '',
-};
-
 export default function Registration() {
+  const { siteConfig } = useCMS();
   const ref = useRevealOnScroll<HTMLElement>();
-  const [form, setForm] = useState<FormData>(initialForm);
-  const [errors, setErrors] = useState<Partial<FormData>>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [regId, setRegId] = useState('');
+  const [showQRZoom, setShowQRZoom] = useState(false);
 
-  const validate = (): boolean => {
-    const e: Partial<FormData> = {};
-    if (!form.name.trim()) e.name = 'Name is required';
-    if (!form.college.trim()) e.college = 'College name is required';
-    if (!form.department.trim()) e.department = 'Department is required';
-    if (!form.year) e.year = 'Year is required';
-    if (!form.phone.trim()) e.phone = 'Phone number is required';
-    else if (!/^\d{10}$/.test(form.phone.replace(/\s/g, ''))) e.phone = 'Enter a valid 10-digit phone number';
-    if (!form.email.trim()) e.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email address';
-    if (!form.event) e.event = 'Please select an event';
-    if (!form.transactionId.trim()) e.transactionId = 'Transaction ID is required';
-    setErrors(e);
-    return Object.keys(e).length === 0;
+  const handleRegisterClick = () => {
+    window.open(siteConfig.googleFormUrl, '_blank', 'noopener,noreferrer');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    const id = `PRY-DEMO-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-    setRegId(id);
-    setSubmitted(true);
-  };
-
-  const reset = () => {
-    setForm(initialForm);
-    setErrors({});
-    setSubmitted(false);
-  };
-
-  const update = (key: keyof FormData, value: string) => {
-    setForm({ ...form, [key]: value });
-    if (errors[key]) setErrors({ ...errors, [key]: undefined });
-  };
-
-  const inputClass = (key: keyof FormData) =>
-    `input-field ${errors[key] ? 'border-[var(--danger)]' : ''}`;
-
-  const openEvents = events.filter((ev) => ev.status === 'Open');
+  const isOpen = siteConfig.registrationStatus === 'OPEN';
 
   return (
     <section id="register" ref={ref} className="section-py">
       <div className="container-px">
+        {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-10 reveal">
-          <span className="section-eyebrow">Register</span>
-          <h2 className="section-title mt-2 mb-4">Registration</h2>
-          <p className="text-[var(--text-secondary)] text-lg">
-            Register for your chosen event. This is a prototype — no payment is processed.
+          <span className="section-eyebrow">Official Registration</span>
+          <h2 className="section-title mt-2 mb-4">Registration & Payment</h2>
+          <p className="text-[var(--text-secondary)] text-base sm:text-lg">
+            Join us for PRAYUDDHA 2K26 at Anna University (BIT Campus), Tiruchirappalli.
           </p>
         </div>
 
-        {submitted ? (
-          <div className="max-w-lg mx-auto surface-card p-8 text-center reveal animate-scale-in">
-            <CheckCircle2 size={56} className="text-[var(--success)] mx-auto mb-4" />
-            <h3 className="font-display text-xl font-bold mb-2">Registration Successful</h3>
-            <p className="text-sm text-[var(--text-muted)] mb-6">
-              This is prototype/demo functionality. No data has been saved.
-            </p>
-            <div className="surface-card p-4 text-left space-y-2 mb-6">
-              <div className="flex justify-between">
-                <span className="text-sm text-[var(--text-muted)]">Registration ID:</span>
-                <span className="text-sm font-mono font-bold text-[var(--accent)]">{regId}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-[var(--text-muted)]">Selected Event:</span>
-                <span className="text-sm font-medium">{form.event}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-[var(--text-muted)]">Participant:</span>
-                <span className="text-sm font-medium">{form.name}</span>
-              </div>
-            </div>
-            <button onClick={reset} className="btn btn-secondary">
-              Register Another Event
-            </button>
-          </div>
-        ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="max-w-2xl mx-auto surface-card p-6 sm:p-8 space-y-5 reveal"
-            noValidate
-          >
-            {/* Single Fee & Lunch Highlight Banner */}
-            <div className="surface-card p-4 rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-light)]/30 space-y-2">
-              <div className="flex items-center justify-between text-xs font-bold text-[var(--accent)] uppercase tracking-wider">
-                <span>ONE ENTRY FEE • FULL SYMPOSIUM ACCESS</span>
-                <span>Includes Biryani Lunch</span>
-              </div>
-              <p className="text-xs text-[var(--text-secondary)]">
-                Single registration fee covers all technical & non-technical events plus delicious Veg / Non-Veg Biryani lunch for participants.
-              </p>
-            </div>
-
-            {/* Prototype notice */}
-            <div className="flex items-start gap-2 p-3 rounded-lg bg-[var(--warning-light)] text-[var(--warning)] text-sm">
-              <Info size={16} className="shrink-0 mt-0.5" />
-              <span>
-                This is a prototype registration form. No real payment is processed and no data is
-                stored. The form is designed to connect to a backend later.
+        {/* REGISTRATION STATUS & GOOGLE FORM CARD */}
+        <div className="max-w-3xl mx-auto surface-card p-6 sm:p-8 rounded-2xl border-2 border-[var(--accent)] shadow-xl reveal space-y-6 bg-[var(--surface)] relative overflow-hidden">
+          {/* Top Status Banner */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-xl bg-[var(--accent-light)]/40 border border-[var(--accent)]/30">
+            <div className="flex items-center gap-2">
+              <span className={`badge text-xs font-bold uppercase tracking-wider ${isOpen ? 'badge-success' : 'badge-danger'}`}>
+                REGISTRATION STATUS: {siteConfig.registrationStatus}
               </span>
             </div>
+            <span className="text-xs font-semibold text-[var(--accent)]">
+              {siteConfig.entryFeeNotice || 'ONE ENTRY FEE • FULL SYMPOSIUM ACCESS'}
+            </span>
+          </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-              {/* Name */}
-              <div>
-                <label htmlFor="r-name" className="block text-sm font-medium mb-1.5">
-                  Name <span className="text-[var(--danger)]">*</span>
-                </label>
-                <input
-                  id="r-name"
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => update('name', e.target.value)}
-                  className={inputClass('name')}
-                  placeholder="Your full name"
-                />
-                {errors.name && (
-                  <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.name}
-                  </p>
-                )}
+          {/* Description & Included Highlights */}
+          <div className="space-y-4 text-center sm:text-left">
+            <h3 className="font-display text-2xl font-bold text-[var(--text-primary)]">
+              Complete Your Registration via Official Google Form
+            </h3>
+            <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+              Registration for all technical and non-technical events is managed through our official Google Form. Single entry fee of <strong className="text-[var(--accent)]">{siteConfig.registrationFee}</strong> covers participation in all symposium events, participation certificates, and a delicious <strong>Veg / Non-Veg Biryani Lunch</strong>.
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-3 text-xs pt-2">
+              <div className="p-3 rounded-xl bg-[var(--code-bg)] border border-[var(--border)] space-y-1">
+                <span className="font-bold text-[var(--accent)] uppercase tracking-wider block">
+                  Included in ₹299 Entry Fee:
+                </span>
+                <ul className="space-y-1 text-[var(--text-secondary)]">
+                  <li>• Access to all Technical Competitions</li>
+                  <li>• Access to all Non-Technical Events</li>
+                  <li>• Veg / Non-Veg Biryani Lunch</li>
+                  <li>• Official Symposium Certificate</li>
+                </ul>
               </div>
 
-              {/* College */}
-              <div>
-                <label htmlFor="r-college" className="block text-sm font-medium mb-1.5">
-                  College Name <span className="text-[var(--danger)]">*</span>
-                </label>
-                <input
-                  id="r-college"
-                  type="text"
-                  value={form.college}
-                  onChange={(e) => update('college', e.target.value)}
-                  className={inputClass('college')}
-                  placeholder="Your college name"
-                />
-                {errors.college && (
-                  <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.college}
-                  </p>
-                )}
+              <div className="p-3 rounded-xl bg-[var(--code-bg)] border border-[var(--border)] space-y-1">
+                <span className="font-bold text-[var(--accent)] uppercase tracking-wider block">
+                  Payment Mode (GPay / PhonePe / UPI):
+                </span>
+                <p className="text-[var(--text-secondary)] font-medium">
+                  UPI / Phone: <strong className="text-[var(--text-primary)] font-mono">{siteConfig.upiPhone}</strong>
+                </p>
+                <p className="text-[var(--text-muted)] text-[11px] pt-1">
+                  Keep your payment transaction ID or screenshot ready to enter in the Google Form.
+                </p>
               </div>
+            </div>
+          </div>
 
-              {/* Department */}
-              <div>
-                <label htmlFor="r-dept" className="block text-sm font-medium mb-1.5">
-                  Department <span className="text-[var(--danger)]">*</span>
-                </label>
-                <input
-                  id="r-dept"
-                  type="text"
-                  value={form.department}
-                  onChange={(e) => update('department', e.target.value)}
-                  className={inputClass('department')}
-                  placeholder="e.g., IT, AIML, CSE"
-                />
-                {errors.department && (
-                  <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.department}
-                  </p>
-                )}
+          {/* QR Code & Payment Section */}
+          <div className="surface-card p-5 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2">
+                <QrCode size={20} className="text-[var(--accent)]" />
+                <h4 className="font-display font-bold text-base text-[var(--text-primary)]">
+                  Scan QR Code to Pay
+                </h4>
               </div>
-
-              {/* Year */}
-              <div>
-                <label htmlFor="r-year" className="block text-sm font-medium mb-1.5">
-                  Year <span className="text-[var(--danger)]">*</span>
-                </label>
-                <select
-                  id="r-year"
-                  value={form.year}
-                  onChange={(e) => update('year', e.target.value)}
-                  className={inputClass('year')}
-                >
-                  <option value="">Select year</option>
-                  <option value="1st Year">1st Year</option>
-                  <option value="2nd Year">2nd Year</option>
-                  <option value="3rd Year">3rd Year</option>
-                  <option value="4th Year">4th Year</option>
-                </select>
-                {errors.year && (
-                  <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.year}
-                  </p>
-                )}
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label htmlFor="r-phone" className="block text-sm font-medium mb-1.5">
-                  Phone <span className="text-[var(--danger)]">*</span>
-                </label>
-                <input
-                  id="r-phone"
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => update('phone', e.target.value)}
-                  className={inputClass('phone')}
-                  placeholder="10-digit phone number"
-                  maxLength={10}
-                />
-                {errors.phone && (
-                  <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.phone}
-                  </p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div>
-                <label htmlFor="r-email" className="block text-sm font-medium mb-1.5">
-                  Email <span className="text-[var(--danger)]">*</span>
-                </label>
-                <input
-                  id="r-email"
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => update('email', e.target.value)}
-                  className={inputClass('email')}
-                  placeholder="you@example.com"
-                />
-                {errors.email && (
-                  <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} /> {errors.email}
-                  </p>
-                )}
+              <p className="text-xs text-[var(--text-secondary)]">
+                Scan using Google Pay, PhonePe, Paytm or any UPI app.
+              </p>
+              <div className="text-xs font-mono bg-[var(--code-bg)] p-2 rounded-lg text-[var(--accent)] font-bold inline-block">
+                UPI: {siteConfig.upiPhone}
               </div>
             </div>
 
-            {/* Event */}
-            <div>
-              <label htmlFor="r-event" className="block text-sm font-medium mb-1.5">
-                Event <span className="text-[var(--danger)]">*</span>
-              </label>
-              <select
-                id="r-event"
-                value={form.event}
-                onChange={(e) => update('event', e.target.value)}
-                className={inputClass('event')}
+            {/* QR Image Box */}
+            <div
+              onClick={() => setShowQRZoom(true)}
+              className="w-32 h-32 rounded-xl bg-white p-2 border-2 border-[var(--accent)]/40 shadow-md shrink-0 cursor-pointer group hover:scale-105 transition-transform relative"
+              title="Click to zoom QR Code"
+            >
+              <img
+                src={siteConfig.qrCodeUrl}
+                alt="Registration UPI QR Code"
+                className="w-full h-full object-contain"
+              />
+              <span className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center text-white text-[10px] font-bold">
+                Click to Zoom
+              </span>
+            </div>
+          </div>
+
+          {/* MAIN GOOGLE FORM ACTION BUTTON */}
+          <div className="pt-2 text-center space-y-3">
+            {isOpen ? (
+              <button
+                onClick={handleRegisterClick}
+                className="btn btn-primary w-full py-4 text-base font-bold shadow-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
               >
-                <option value="">Select an event</option>
-                {openEvents.map((ev) => (
-                  <option key={ev.id} value={ev.name}>
-                    {ev.name} ({ev.category})
-                  </option>
-                ))}
-              </select>
-              {errors.event && (
-                <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                  <AlertCircle size={12} /> {errors.event}
-                </p>
-              )}
-            </div>
+                <ExternalLink size={20} />
+                {siteConfig.registrationBtnText || 'Open Official Google Form'}
+              </button>
+            ) : (
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-sm font-bold text-center">
+                Registrations are currently closed. Please check back later for updates.
+              </div>
+            )}
 
-            {/* Team members */}
-            <div>
-              <label htmlFor="r-team" className="block text-sm font-medium mb-1.5">
-                Team Members
-              </label>
-              <textarea
-                id="r-team"
-                rows={2}
-                value={form.teamMembers}
-                onChange={(e) => update('teamMembers', e.target.value)}
-                className="input-field resize-none"
-                placeholder="List team member names (if applicable)"
-              />
-            </div>
+            <p className="text-xs text-[var(--text-muted)] font-mono">
+              Link: <span className="underline truncate max-w-md inline-block align-bottom">{siteConfig.googleFormUrl}</span>
+            </p>
+          </div>
+        </div>
 
-            {/* Transaction ID */}
-            <div>
-              <label htmlFor="r-txn" className="block text-sm font-medium mb-1.5">
-                Transaction ID <span className="text-[var(--danger)]">*</span>
-              </label>
-              <input
-                id="r-txn"
-                type="text"
-                value={form.transactionId}
-                onChange={(e) => update('transactionId', e.target.value)}
-                className={inputClass('transactionId')}
-                placeholder="Payment transaction ID"
-              />
-              {errors.transactionId && (
-                <p className="text-xs text-[var(--danger)] mt-1 flex items-center gap-1">
-                  <AlertCircle size={12} /> {errors.transactionId}
-                </p>
-              )}
-            </div>
-
-            <button type="submit" className="btn btn-primary w-full">
-              <Calendar size={16} />
-              Submit Registration
-            </button>
-          </form>
-        )}
-
-        {/* FINAL CTA BLOCK */}
-        <div className="max-w-4xl mx-auto mt-16 surface-card p-8 rounded-2xl border-2 border-[var(--accent)] shadow-xl text-center reveal bg-[var(--surface)] relative overflow-hidden">
+        {/* FINAL VENUE & CTA BAR */}
+        <div className="max-w-4xl mx-auto mt-16 surface-card p-8 rounded-2xl border border-[var(--border)] shadow-md text-center reveal bg-[var(--surface)]">
           <div className="space-y-3">
             <span className="badge badge-accent text-xs font-bold uppercase tracking-wider">
-              Join Us at Anna University BIT Campus
+              Anna University (BIT Campus), Tiruchirappalli
             </span>
             <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">
               Don’t just hear about PRAYUDDHA 2K26. Be there.
@@ -344,30 +145,44 @@ export default function Registration() {
               One entry. Full symposium experience. Great events, great food, great memories.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+              <button onClick={handleRegisterClick} className="btn btn-primary shadow-md">
+                <Ticket size={16} />
+                {siteConfig.registrationBtnText || 'Register Now'}
+              </button>
               <a
-                href="#register"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' });
-                  document.getElementById('r-name')?.focus();
-                }}
-                className="btn btn-primary shadow-md"
-              >
-                <Calendar size={16} />
-                Register Now
-              </a>
-              <a
-                href={SITE_CONFIG.googleMapsURL}
+                href={siteConfig.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-secondary shadow-sm"
               >
-                Get Directions
+                Get Location Directions
               </a>
             </div>
           </div>
         </div>
       </div>
+
+      {/* QR ZOOM LIGHTBOX */}
+      {showQRZoom && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-fade-in"
+          onClick={() => setShowQRZoom(false)}
+        >
+          <div
+            className="surface-card p-6 rounded-2xl border border-white/20 bg-zinc-900 max-w-sm w-full text-center text-white space-y-4 shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h4 className="font-display font-bold text-lg">PRAYUDDHA Official QR Code</h4>
+            <div className="w-64 h-64 mx-auto rounded-xl bg-white p-3 border shadow-inner">
+              <img src={siteConfig.qrCodeUrl} alt="QR Code Large" className="w-full h-full object-contain" />
+            </div>
+            <p className="text-xs text-zinc-300 font-mono">UPI Phone: {siteConfig.upiPhone}</p>
+            <button onClick={() => setShowQRZoom(false)} className="btn btn-secondary text-xs w-full">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

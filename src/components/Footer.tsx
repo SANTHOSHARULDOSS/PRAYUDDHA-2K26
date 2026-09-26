@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import { Heart, X, Code, Sparkles, UserCheck } from 'lucide-react';
-import { SITE_CONFIG } from '@/data/siteConfig';
+import { Heart, X, Code, UserCheck, Shield } from 'lucide-react';
+import { useCMS } from '@/hooks/useCMS';
 
-export default function Footer() {
+interface FooterProps {
+  onOpenAdmin?: () => void;
+}
+
+export default function Footer({ onOpenAdmin }: FooterProps) {
+  const { siteConfig } = useCMS();
   const [showCredits, setShowCredits] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -27,23 +32,23 @@ export default function Footer() {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <img
-                src="/images/anna-university-logo.png"
+                src="/images/branding/anna-university-logo.png"
                 alt="Anna University Crest"
                 className="h-10 w-auto object-contain"
               />
               <div className="h-6 w-px bg-[var(--border)]" />
               <img
-                src="/images/prayuddha-logo.png"
+                src="/images/branding/prayuddha-logo.png"
                 alt="PRAYUDDHA Logo"
                 className="h-9 w-auto object-contain"
               />
             </div>
             <h3 className="font-display font-bold text-lg">
-              <span className="text-[var(--accent)]">PRAYUDDHA</span> 2K26
+              <span className="text-[var(--accent)]">{siteConfig.siteName.split(' ')[0]}</span> {siteConfig.edition}
             </h3>
-            <p className="text-sm text-[var(--text-muted)]">{SITE_CONFIG.motto}</p>
+            <p className="text-sm text-[var(--text-muted)]">{siteConfig.motto}</p>
             <p className="text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-              {SITE_CONFIG.slogan}
+              {siteConfig.slogan}
             </p>
           </div>
 
@@ -51,7 +56,7 @@ export default function Footer() {
           <div>
             <h4 className="font-display font-semibold text-sm mb-3">Quick Links</h4>
             <ul className="space-y-1.5">
-              {SITE_CONFIG.navLinks.slice(0, 5).map((link) => (
+              {siteConfig.navLinks.slice(0, 5).map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
@@ -70,9 +75,9 @@ export default function Footer() {
 
           {/* More links */}
           <div>
-            <h4 className="font-display font-semibold text-sm mb-3">Explore</h4>
+            <h4 className="font-display font-semibold text-sm mb-3">Explore & Admin</h4>
             <ul className="space-y-1.5">
-              {SITE_CONFIG.navLinks.slice(5).map((link) => (
+              {siteConfig.navLinks.slice(5).map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
@@ -86,18 +91,17 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
-              <li>
-                <a
-                  href="#register"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollTo('register');
-                  }}
-                  className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
-                >
-                  Register
-                </a>
-              </li>
+              {onOpenAdmin && (
+                <li>
+                  <button
+                    onClick={onOpenAdmin}
+                    className="text-sm text-[var(--accent)] font-semibold hover:underline flex items-center gap-1 mt-1"
+                  >
+                    <Shield size={13} />
+                    Admin Portal (/admin)
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -105,13 +109,13 @@ export default function Footer() {
           <div>
             <h4 className="font-display font-semibold text-sm mb-3">Address</h4>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              {SITE_CONFIG.institution}
+              {siteConfig.institution}
               <br />
-              {SITE_CONFIG.university}
+              {siteConfig.university}
               <br />
-              {SITE_CONFIG.city} – {SITE_CONFIG.pincode}
+              {siteConfig.city} – {siteConfig.pincode}
               <br />
-              {SITE_CONFIG.state}
+              {siteConfig.state}
             </p>
           </div>
         </div>
@@ -121,7 +125,6 @@ export default function Footer() {
             © 2026 PRAYUDDHA 2K26. All rights reserved.
           </p>
 
-          {/* Clickable Built with credits */}
           <button
             onClick={() => setShowCredits(true)}
             className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors flex items-center gap-1 cursor-pointer focus:outline-none py-1 px-2 rounded-md hover:bg-[var(--code-bg)]"
@@ -134,7 +137,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* SUBTLE WEBSITE CREDITS POPOVER MODAL */}
+      {/* CREDITS POPOVER MODAL */}
       {showCredits && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
@@ -197,4 +200,3 @@ export default function Footer() {
     </footer>
   );
 }
-

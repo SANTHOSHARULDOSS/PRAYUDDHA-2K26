@@ -218,6 +218,50 @@
     color: var(--accent);
   }
 
+  /* Admin CMS High-Contrast Overrides */
+  .admin-portal {
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --border: #27272a;
+    --surface: #18181b;
+    --surface-elevated: #27272a;
+    --code-bg: #09090b;
+    color: #f4f4f5;
+  }
+
+  .admin-portal .btn-secondary {
+    background-color: #27272a;
+    color: #f4f4f5 !important;
+    border: 1px solid #3f3f46;
+  }
+  .admin-portal .btn-secondary:hover {
+    background-color: #3f3f46;
+    border-color: var(--accent);
+    color: #ffffff !important;
+  }
+
+  .admin-portal .btn-ghost {
+    color: #a1a1aa !important;
+  }
+  .admin-portal .btn-ghost:hover {
+    color: #ffffff !important;
+    background-color: #27272a;
+  }
+
+  .admin-portal input,
+  .admin-portal select,
+  .admin-portal textarea {
+    color: #ffffff !important;
+    background-color: #09090b !important;
+    border-color: #27272a !important;
+  }
+
+  .admin-portal input::placeholder,
+  .admin-portal textarea::placeholder {
+    color: #71717a !important;
+  }
+
   .btn-ghost {
     background-color: transparent;
     color: var(--text-secondary);

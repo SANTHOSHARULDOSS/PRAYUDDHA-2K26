@@ -1,7 +1,21 @@
 import { useState } from 'react';
-import { Calendar, Clock, MapPin, ArrowRight, Sparkles, Image as ImageIcon, X, Trophy, Award } from 'lucide-react';
-import { SITE_CONFIG } from '@/data/siteConfig';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  ArrowRight,
+  Sparkles,
+  Image as ImageIcon,
+  BookOpen,
+  X,
+  Trophy,
+  Award,
+  Bell,
+} from 'lucide-react';
+import { useCMS } from '@/hooks/useCMS';
 import { useCountdown } from '@/hooks/useCountdown';
+import BrochureModal from './BrochureModal';
+import ArcherAnimation from './ArcherAnimation';
 
 function CountdownUnit({ value, label }: { value: number; label: string }) {
   return (
@@ -19,8 +33,17 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
 }
 
 export default function Hero() {
-  const timeLeft = useCountdown(SITE_CONFIG.countdownDate);
+  const { siteConfig, poster, brochure, announcements } = useCMS();
+  const timeLeft = useCountdown(siteConfig.countdownDate);
   const [showPosterModal, setShowPosterModal] = useState(false);
+  const [showBrochureModal, setShowBrochureModal] = useState(false);
+  const [dismissedNotice, setDismissedNotice] = useState(false);
+
+  const activeNotice = announcements.find((a) => a.isPublished);
+
+  const handleRegisterClick = () => {
+    window.open(siteConfig.googleFormUrl, '_blank', 'noopener,noreferrer');
+  };
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -29,7 +52,7 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-screen flex flex-col justify-center pt-20 pb-12 overflow-hidden">
-      {/* Subtle technical background */}
+      {/* Background Grid Pattern */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[var(--background)]" />
         <div
@@ -44,14 +67,37 @@ export default function Hero() {
         <div className="absolute bottom-1/4 -left-32 w-96 h-96 rounded-full bg-[var(--accent)] opacity-[0.03] blur-3xl" />
       </div>
 
-      <div className="container-px w-full max-w-7xl mx-auto space-y-8">
+      <div className="container-px w-full max-w-7xl mx-auto space-y-6">
+        {/* LIVE ANNOUNCEMENT BANNER */}
+        {activeNotice && !dismissedNotice && (
+          <div className="surface-card p-3 sm:p-4 rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-light)]/20 text-xs sm:text-sm flex items-center justify-between gap-3 animate-fade-in">
+            <div className="flex items-center gap-2.5">
+              <span className={`badge shrink-0 text-[10px] ${
+                activeNotice.type === 'urgent' ? 'badge-danger' : 'badge-accent'
+              }`}>
+                <Bell size={12} className="mr-1 inline" /> NOTICE
+              </span>
+              <p className="font-medium text-[var(--text-primary)]">
+                <strong>{activeNotice.title}:</strong> {activeNotice.content}
+              </p>
+            </div>
+            <button
+              onClick={() => setDismissedNotice(true)}
+              className="p-1 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)] shrink-0"
+              aria-label="Dismiss notice"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
         {/* UPPER INSTITUTIONAL HEADER BAR */}
         <div className="animate-fade-in-up surface-card p-4 sm:p-6 rounded-2xl border border-[var(--border)] shadow-sm bg-[var(--surface)]/80 backdrop-blur-md">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
             {/* Left: Official Anna University Seal */}
             <div className="flex items-center gap-4 shrink-0">
               <img
-                src="/images/anna-university-logo.png"
+                src="/images/branding/anna-university-logo.png"
                 alt="Anna University Logo"
                 className="h-16 sm:h-20 md:h-22 w-auto object-contain drop-shadow-sm"
               />
@@ -67,7 +113,7 @@ export default function Hero() {
                 </p>
               </div>
               <h2 className="font-display font-semibold text-sm sm:text-base md:text-lg text-[var(--text-primary)]">
-                {SITE_CONFIG.institution}
+                {siteConfig.institution}
               </h2>
               <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-medium">
                 Organized by Department of Information Technology & Department of AI & ML
@@ -78,7 +124,7 @@ export default function Hero() {
             <div className="hidden md:flex items-center gap-4 shrink-0">
               <div className="h-12 w-px bg-[var(--border)]" />
               <img
-                src="/images/prayuddha-logo.png"
+                src="/images/branding/prayuddha-logo.png"
                 alt="PRAYUDDHA Emblem"
                 className="h-16 sm:h-20 md:h-22 w-auto object-contain drop-shadow-sm"
               />
@@ -89,11 +135,11 @@ export default function Hero() {
         {/* MAIN HERO GRID: Content + Official Poster Card */}
         <div className="grid lg:grid-cols-12 gap-8 items-center">
           {/* Left Column: Event Title, Details & Countdown */}
-          <div className="lg:col-span-7 text-center lg:text-left space-y-6">
+          <div className="lg:col-span-7 text-center lg:text-left space-y-6 relative">
             {/* Eyebrow badge */}
             <div className="animate-fade-in-up inline-flex items-center gap-2 badge badge-accent">
               <Sparkles size={14} />
-              {SITE_CONFIG.symposiumIdentity}
+              {siteConfig.symposiumIdentity}
             </div>
 
             {/* Main Title */}
@@ -102,11 +148,11 @@ export default function Hero() {
                 className="animate-fade-in-up font-display font-extrabold tracking-tight"
                 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', lineHeight: 1.1 }}
               >
-                <span className="text-[var(--text-primary)]">PRAYUDDHA</span>{' '}
-                <span className="text-[var(--accent)]">2K26</span>
+                <span className="text-[var(--text-primary)]">{siteConfig.siteName.split(' ')[0]}</span>{' '}
+                <span className="text-[var(--accent)]">{siteConfig.edition}</span>
               </h1>
               <p className="animate-fade-in-up font-display text-lg sm:text-xl font-semibold text-[var(--text-secondary)] mt-2">
-                {SITE_CONFIG.motto} — <span className="text-[var(--accent)]">{SITE_CONFIG.tagline}</span>
+                {siteConfig.motto} — <span className="text-[var(--accent)]">{siteConfig.tagline}</span>
               </p>
             </div>
 
@@ -115,19 +161,19 @@ export default function Hero() {
               <div className="surface-card flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm">
                 <Calendar size={15} className="text-[var(--accent)]" />
                 <span className="font-medium text-[var(--text-secondary)]">
-                  {SITE_CONFIG.eventDate}, {SITE_CONFIG.eventDay}
+                  {siteConfig.eventDate}, {siteConfig.eventDay}
                 </span>
               </div>
               <div className="surface-card flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm">
                 <Clock size={15} className="text-[var(--accent)]" />
                 <span className="font-medium text-[var(--text-secondary)]">
-                  {SITE_CONFIG.eventTime}
+                  {siteConfig.eventTime}
                 </span>
               </div>
               <div className="surface-card flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm">
                 <MapPin size={15} className="text-[var(--accent)]" />
                 <span className="font-medium text-[var(--text-secondary)]">
-                  {SITE_CONFIG.venue}
+                  {siteConfig.venue}
                 </span>
               </div>
             </div>
@@ -156,18 +202,29 @@ export default function Hero() {
               </div>
             )}
 
-            {/* CTAs */}
-            <div className="animate-fade-in-up flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
-              <button onClick={() => scrollTo('register')} className="btn btn-primary">
-                Register Now
+            {/* Action CTAs + ARCHER ANIMATION */}
+            <div className="relative animate-fade-in-up flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+              <ArcherAnimation />
+
+              <button
+                onClick={handleRegisterClick}
+                className="btn btn-primary shadow-lg hover:scale-105 transition-transform"
+              >
+                {siteConfig.registrationBtnText || 'Register Now'}
                 <ArrowRight size={16} />
               </button>
-              <button onClick={() => scrollTo('events')} className="btn btn-secondary">
-                Explore Events
+
+              <button
+                onClick={() => setShowBrochureModal(true)}
+                className="btn btn-secondary flex items-center gap-2 shadow-sm"
+              >
+                <BookOpen size={16} />
+                View 2-Page Brochure
               </button>
+
               <button
                 onClick={() => setShowPosterModal(true)}
-                className="btn btn-secondary flex items-center gap-2"
+                className="btn btn-secondary flex items-center gap-2 shadow-sm"
               >
                 <ImageIcon size={16} />
                 View Official Poster
@@ -176,26 +233,26 @@ export default function Hero() {
 
             {/* Slogan */}
             <p className="animate-fade-in-up font-display text-xs font-bold tracking-[0.25em] text-[var(--text-muted)] uppercase">
-              {SITE_CONFIG.slogan}
+              {siteConfig.slogan}
             </p>
           </div>
 
-          {/* Right Column: Official Poster Card & Highlights */}
+          {/* Right Column: Official Poster Card */}
           <div className="lg:col-span-5 flex flex-col items-center">
             <div className="w-full max-w-md relative group">
               {/* Decorative aura */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent)]/30 to-[var(--accent-secondary,var(--accent))]/30 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent)]/30 to-[var(--accent)]/10 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500" />
 
               {/* Main Card */}
               <div className="relative surface-card rounded-2xl overflow-hidden border border-[var(--border)] shadow-xl p-3 bg-[var(--surface)]">
                 <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-black/10">
                   <img
-                    src="/images/prayuddha-poster.jpg"
-                    alt="PRAYUDDHA 2K26 Official Poster"
+                    src={poster.posterUrl}
+                    alt={poster.caption || 'PRAYUDDHA Official Poster'}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
                     onClick={() => setShowPosterModal(true)}
                   />
-                  {/* Glass Overlay on Hover */}
+                  {/* Overlay */}
                   <div
                     onClick={() => setShowPosterModal(true)}
                     className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer text-white p-4"
@@ -230,7 +287,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* FULL-SCREEN POSTER LIGHTBOX MODAL */}
+      {/* FULL-SCREEN POSTER MODAL */}
       {showPosterModal && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-fade-in"
@@ -240,10 +297,9 @@ export default function Hero() {
             className="relative max-w-4xl max-h-[90vh] w-full surface-card rounded-2xl overflow-hidden p-2 bg-black/90 flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header bar */}
             <div className="w-full flex items-center justify-between p-3 border-b border-white/10 text-white">
               <div className="flex items-center gap-2">
-                <img src="/images/prayuddha-logo.png" alt="Logo" className="h-6 w-auto" />
+                <img src="/images/branding/prayuddha-logo.png" alt="Logo" className="h-6 w-auto" />
                 <span className="font-display font-bold text-sm">PRAYUDDHA 2K26 Official Poster</span>
               </div>
               <button
@@ -255,10 +311,9 @@ export default function Hero() {
               </button>
             </div>
 
-            {/* Poster Image */}
             <div className="w-full overflow-auto max-h-[80vh] flex items-center justify-center p-2">
               <img
-                src="/images/prayuddha-poster.jpg"
+                src={poster.posterUrl}
                 alt="PRAYUDDHA 2K26 Full Poster"
                 className="max-h-[75vh] w-auto object-contain rounded-lg shadow-2xl"
               />
@@ -266,7 +321,11 @@ export default function Hero() {
           </div>
         </div>
       )}
+
+      {/* 2-PAGE BROCHURE MODAL */}
+      {showBrochureModal && (
+        <BrochureModal brochure={brochure} onClose={() => setShowBrochureModal(false)} />
+      )}
     </section>
   );
 }
-
